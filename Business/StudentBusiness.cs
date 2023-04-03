@@ -14,46 +14,95 @@ namespace StudentApp.Business
         private StudentContext studentContext;
         public void AddCourse(Course course)
         {
-            using (studentContext)
+            using (studentContext = new StudentContext())
             {
-                studentContext.Add(course);
+                studentContext.Courses.Add(course);
                 studentContext.SaveChanges();
             }
         }
         public void AddStudent(Student student)
         {
-            using (studentContext)
+            using (studentContext = new StudentContext())
             {
-                studentContext.Add(student);
+                studentContext.Students.Add(student);
                 studentContext.SaveChanges();
             }
         }
         public void SubmitHomework(HomeworkSubmission homeworkSubmission)
         {
-            using (studentContext)
+            using (studentContext = new StudentContext())
             {
-                studentContext.Add(homeworkSubmission);
+                studentContext.HomeworkSubmissions.Add(homeworkSubmission);
                 studentContext.SaveChanges();
             }
         }
         public List<Student> GetAllStudentsGroupedByCourses()
         {
-            using(studentContext)
+            using (studentContext = new StudentContext())
             {
-                List<Student> students = studentContext.Students
-                    .OrderBy(s => s.StudentCourses.Select(sc => sc.CourseId))
-                    .ToList();
-                return students;
+                //StudentCourse studentCourse = new StudentCourse();
+                //studentCourse.StudentId = 5;
+                //studentCourse.CourseId = 1;
+                //studentContext.StudentCourses.Add(studentCourse);
+                //studentContext.SaveChanges();
+                //System.Threading.Thread.Sleep(1000);
+                if (studentContext.Students.FirstOrDefault() != null)
+                {
+                    var students = studentContext.StudentCourses
+                        .OrderBy(sc => sc.CourseId)
+                        .ThenBy(sc => sc.StudentId)
+                        .Include(sc => sc.Student)
+                        .Select(sc => sc.Student)
+                        .ToList();
+                    students = students.Distinct().ToList();
+                    return students;
+                }
+                return null;
             }
         }
         public Student GetStudentWithAllHomework(int id)
         {
-            using (studentContext)
+            using (studentContext = new StudentContext())
             {
                 Student student = studentContext.Students
-                    .Include(st => st.HomeworkSubmissions.Where(hs => hs.StudentId == id))
+                    .Where(s=>s.Id == id)
+                    .Include(st => st.HomeworkSubmissions)
                     .FirstOrDefault();
-                return student; 
+                return student;
+            }
+        }
+        public List<Student> GetAllStudents()
+        {
+            using (studentContext = new StudentContext())
+            {
+                if (studentContext.Students.FirstOrDefault() != null)
+                {
+                    List<Student> students = studentContext.Students
+                        .ToList();
+                    return students;
+                }
+                return null;
+            }
+        }
+        public List<Course> GetAllCourses()
+        {
+            using (studentContext = new StudentContext())
+            {
+                if (studentContext.Courses.FirstOrDefault() != null)
+                {
+                    List<Course> courses = studentContext.Courses
+                        .ToList();
+                    return courses;
+                }
+                return null;
+            }
+        }
+        public void AddStudentCourse(StudentCourse studentCourse)
+        {
+            using (studentContext = new StudentContext())
+            {
+                studentContext.StudentCourses.Add(studentCourse);
+                studentContext.SaveChanges();
             }
         }
     }

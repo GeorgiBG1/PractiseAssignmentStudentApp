@@ -1,4 +1,5 @@
 ﻿using StudentApp.Data;
+using StudentApp.Presentation;
 using System;
 
 namespace StudentApp
@@ -7,7 +8,8 @@ namespace StudentApp
     {
         static void Main(string[] args)
         {
-            StudentContext studentContext = new StudentContext();
+            //StudentContext studentContext = new StudentContext();
+            Display display = new Display();
         }
     }
 }

@@ -11,6 +11,9 @@ namespace StudentApp
     {
         void AddCourse(Course course);
         void AddStudent(Student student);
+        void AddStudentCourse(StudentCourse studentCourse);
+        List<Course> GetAllCourses();
+        List<Student> GetAllStudents();
         List<Student> GetAllStudentsGroupedByCourses();
         Student GetStudentWithAllHomework(int id);
         void SubmitHomework(HomeworkSubmission homeworkSubmission);
