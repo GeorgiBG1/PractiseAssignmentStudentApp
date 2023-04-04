@@ -12,7 +12,7 @@ namespace StudentApp.Data
     {
         public StudentContext()
         {
-            this.Database.Migrate(); 
+            //this.Database.Migrate(); 
         }
         protected override void OnConfiguring(DbContextOptionsBuilder
             optionsBuilder)
@@ -27,5 +27,11 @@ namespace StudentApp.Data
         public DbSet<StudentCourse> StudentCourses { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<HomeworkSubmission> HomeworkSubmissions { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<StudentCourse>()
+              .HasKey(s => new { s.StudentId, s.CourseId });
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

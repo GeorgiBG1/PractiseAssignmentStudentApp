@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace StudentApp.Migrations
 {
-    public partial class InitialCreate2 : Migration
+    public partial class CompositeKeyAndRemovedId : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -73,14 +73,12 @@ namespace StudentApp.Migrations
                 name: "StudentCourses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     StudentId = table.Column<int>(type: "int", nullable: false),
                     CourseId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StudentCourses", x => x.Id);
+                    table.PrimaryKey("PK_StudentCourses", x => new { x.StudentId, x.CourseId });
                     table.ForeignKey(
                         name: "FK_StudentCourses_Courses_CourseId",
                         column: x => x.CourseId,
@@ -109,11 +107,6 @@ namespace StudentApp.Migrations
                 name: "IX_StudentCourses_CourseId",
                 table: "StudentCourses",
                 column: "CourseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StudentCourses_StudentId",
-                table: "StudentCourses",
-                column: "StudentId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -10,8 +10,8 @@ using StudentApp.Data;
 namespace StudentApp.Migrations
 {
     [DbContext(typeof(StudentContext))]
-    [Migration("20230403100957_InitialCreate2")]
-    partial class InitialCreate2
+    [Migration("20230404085514_CompositeKeyAndRemovedId")]
+    partial class CompositeKeyAndRemovedId
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -106,22 +106,15 @@ namespace StudentApp.Migrations
 
             modelBuilder.Entity("StudentApp.Data.Models.StudentCourse", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
 
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("StudentId", "CourseId");
 
                     b.HasIndex("CourseId");
-
-                    b.HasIndex("StudentId");
 
                     b.ToTable("StudentCourses");
                 });

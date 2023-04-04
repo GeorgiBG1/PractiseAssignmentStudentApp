@@ -65,7 +65,7 @@ namespace StudentApp.Business
             using (studentContext = new StudentContext())
             {
                 Student student = studentContext.Students
-                    .Where(s=>s.Id == id)
+                    .Where(s => s.Id == id)
                     .Include(st => st.HomeworkSubmissions)
                     .FirstOrDefault();
                 return student;
@@ -97,12 +97,25 @@ namespace StudentApp.Business
                 return null;
             }
         }
+        public List<StudentCourse> GetAllStudentCourses()
+        {
+            using (studentContext = new StudentContext())
+            {
+                return studentContext.StudentCourses.ToList();
+            }
+        }
         public void AddStudentCourse(StudentCourse studentCourse)
         {
             using (studentContext = new StudentContext())
             {
+                if (!GetAllStudentCourses()
+                    .Any(sc => sc.StudentId == studentCourse.StudentId
+                            && sc.CourseId == studentCourse.CourseId))
+                {
+                    studentContext = new StudentContext();
                 studentContext.StudentCourses.Add(studentCourse);
                 studentContext.SaveChanges();
+                }
             }
         }
     }

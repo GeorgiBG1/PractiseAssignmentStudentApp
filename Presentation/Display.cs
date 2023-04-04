@@ -99,6 +99,25 @@ namespace StudentApp.Presentation
             year = int.Parse(Console.ReadLine()!);
             student.RegisteredOn = new DateTime(year, month, day);
             studentBusiness.AddStudent(student);
+            var allCourses = studentBusiness.GetAllCourses();
+            var currentStudent = studentBusiness.GetAllStudents().LastOrDefault();
+            if (allCourses!=null)
+            {
+                Console.WriteLine("All courses:\n");
+                foreach (var course in allCourses)
+                {
+                    Console.WriteLine($"ID - {course.Id}. Name - {course.Name}\n" +
+                        $"Additional information:\n{course.Description}\n" +
+                        $"Duration: {course.StartDate} - {course.EndDate}\n" +
+                        $"Price: {course.Price}");
+                }
+                Console.Write("Select course (ID): ");
+                int courseId = int.Parse(Console.ReadLine()!);
+                StudentCourse studentCourse = new StudentCourse();
+                studentCourse.StudentId = currentStudent.Id;
+                studentCourse.CourseId = courseId;
+                studentBusiness.AddStudentCourse(studentCourse);
+            }
         }
         private void SubmitHomework()
         {
